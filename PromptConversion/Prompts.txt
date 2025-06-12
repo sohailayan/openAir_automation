@@ -1,0 +1,109 @@
+This will serve as a blueprint for your Playwright MCP-based automation, using PyTest and the Page Object Model (POM).
+
+---
+
+# Objective:
+Automate the end-to-end login and timesheet submission process for OpenAIR (Valtech) using SSO and Microsoft authentication, validating each step through URL redirection and page content checks. The automation must use the Playwright MCP server for all browser interactions, ensuring no direct Playwright API calls bypass the MCP.
+
+---
+
+# Scenario: OpenAIR SSO Login Flow
+
+### Step 1: Navigate to the OpenAIR SSO Login Page
+- Go to: `https://auth.netsuitesuiteprojectspro.com/login_sso`
+
+### Step 2: Enter Company ID and Initiate SSO
+- Fill in the "Company ID" field with: `Valtech`
+- Click the "Sign In" button
+
+### Step 3: Verify Redirection to Microsoft Login
+- Confirm the URL contains: `login.microsoftonline.com`
+
+### Step 4: Microsoft Login - Enter Email
+- Fill in the email: `mani.gupta@valtech.com`
+- Click "Next" or "Sign In"
+
+### Step 5: Microsoft Login - Enter Password
+- Wait for the password field to appear
+- Fill in the password: ``
+- Click "Sign In"
+
+### Step 6: Handle Microsoft 2FA (MFA)
+- Wait for the 2FA screen to load
+- Extract and display the security verification code (if present) in the terminal/test output
+- Pause for ~30 seconds to allow manual authentication
+
+### Step 7: Confirm Successful Authentication
+- Wait for redirection to: `https://valtech.app.netsuitesuiteprojectspro.com/dashboard.pl?`
+- If redirected, confirm login success
+
+### Step 8: Navigate to Timesheets
+- Click on the "Timesheets" option in the left panel
+- Under the Timesheets dropdown, click "Open"
+
+### Step 9: Open the New Timesheet Page
+- Confirm redirection to: `https://valtech.app.netsuitesuiteprojectspro.com/timesheet.pl?`
+- In the "Open" tab, under the "Name" section, click the date link in the last row
+
+### Step 10: Confirm Timesheet Grid Page
+- Confirm redirection to: `https://valtech.app.netsuitesuiteprojectspro.com/timesheet.pl?uid=...;action=grid;timesheet_id=...`
+
+### Step 11: Fill Timesheet Fields
+- In the "Client : Project" dropdown, select: `Internal IN : IN.AI CoE`
+- In the "Task" dropdown, select: `Development`
+- For Monday to Friday, enter `8` hours in each day's field
+- Leave Saturday and Sunday empty
+- For each weekday, fill the "Additional time entry information" with: `Working on AI-CoE Project and learning playwright automation` (or your preferred description)
+- Click "Close & Save" for each day's notes
+
+### Step 12: Submit the Timesheet
+- Click the "Save & Submit" button
+- Verify a confirmation message appears indicating successful submission
+
+---
+
+# 🔧 Additionally, generate Python code using Playwright integrated with MCP.
+- All browser automation (navigation, input, clicks) must be routed through the MCP server.
+- Do not use any Playwright automation that bypasses the MCP.
+- Organize the project inside a parent folder named: `Playwright-Python-Framework`
+
+---
+
+# 🗂 Organize the Python project using PyTest and Page Object Model (POM) as shown:
+
+```
+Playwright-Python-Framework/
+├── requirements.txt
+├── Pages/
+│   ├── __init__.py
+│   ├── openair_login_page.py       # URLs, locators, and page actions for SSO login and Microsoft auth
+│   └── timesheet_page.py           # Locators and actions for timesheet operations
+├── Test/
+│   ├── test_openair_login.py       # Test scenario for login and timesheet flow
+│   ├── conftest.py                 # MCP setup and shared fixtures
+│   └── pytest.ini
+└── README.md
+```
+
+---
+
+# Project Guidelines
+
+- **Test Runner:** Use PyTest for all test execution.
+- **Directory Structure:** All files and dependencies must reside within the `Playwright-Python-Framework` directory.
+- **Page Object Model (POM):** Modularize the following:
+  - **OpenAIR SSO URL** and navigation logic
+  - **Timesheet page actions** (filling, saving, submitting)
+  - **Microsoft login locators and 2FA handling**
+  - **Actions for entering Company ID, logging in, and checking redirection status**
+- **MCP Integration:** All browser actions must be performed via the MCP server, not direct Playwright API calls.
+- **Configuration:** Use `requirements.txt` for dependencies, and provide a `README.md` with setup and usage instructions.
+
+---
+
+# Next Steps
+
+- You can now proceed to convert your `.py` file into this structure, ensuring all browser actions are routed through the MCP server and following the POM and PyTest conventions outlined above.
+- If you need, I can help scaffold the actual code files or provide templates for each component.
+
+Let me know if you want to proceed with code scaffolding or need further details on any step!
